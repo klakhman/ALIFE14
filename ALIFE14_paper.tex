@@ -53,7 +53,7 @@ Agent's behavior in the environment is controlled by a neural network. The struc
 	n^{out}=\underset{n}{\operatorname{argmin}} \left[\dbinom{2}{n}\geq2n^{env}\right] \enspace . 
 \end{equation}   
 
-Interneurons of neurocontroller are organized in a layered topology, which in general case has no restriction on its connectivity structure. This allows to form both direct and recurrent effector synapses. As usual excitation propagates by recurrent effector synapses with unit time delay.
+Interneurons of a neurocontroller are organized in a layered topology, which in general case has no restriction on its connectivity structure. This allows to form both direct and recurrent effector synapses. As usual excitation propagates by recurrent effector synapses with unit time delay.
 
 \subsection{Evolutionary algorithm}
 
@@ -119,46 +119,70 @@ Due to the introduced mechanism for mismatch detection one could effectively loc
 
 Learning for II-type mismatch occurs in exactly the same manner except that we add strong inhibitory connection between activated and mismatched neurons in order to avoid mismatch in the similar behavioral situations.   
 
-The presented learning procedure is performed for all mismatched neurons on each time step resulting in a set of local modifications of connectivity structure. This scheme fits into the general learning approach in which learning is considered in terms of the traditional evolutionary mechanisms: generation of diversity and selection~\citep{Burtsev2008}. The activation of the ``silent'' neurons could be interpreted as a local mutations of neurocontroller, which can potentially lead to successful behavior. Nonetheless, learning terminates only if there is no mismatch between organism's actions and environment detected at the neuronal level.      
+The presented learning procedure is performed for all mismatched neurons on each time step resulting in a set of local modifications of connectivity structure. This scheme fits into the general learning approach in which learning is considered in terms of the traditional evolutionary mechanisms: generation of diversity and selection~\citep{Burtsev2008}. The activation of the silent neurons could be interpreted as a local mutations of neurocontroller, which can potentially lead to successful behavior. Nonetheless, learning terminates only if there is no mismatch between organism's actions and environment detected at the neuronal level.      
 
 \section{Experimental results}
-
-Primarily we have studied how learning algorithm affects efficiency of an agents. We have randomly generated 10 environments with different goals structure and run evolution with and without learning 5 times for each environment. Then we detected the best population in terms of average accumulated reward in each run. For all agents in the best population we have performed development process for 5 times. Finally, we run these 5 different controllers for each agent from all $2^{n^{\mathrm{env}}}$ initial states of the environment. On the Fig~\ref{Efficiency_analysis}A we present averaged results of the described analysis procedure. We have not found statistical difference between efficiency of the agents evolved with and without learning -- t-test showed p-value $0.23$. However, shutdown of learning only in the analysis phase significantly decreases the efficiency that reveals the importance of learning for these agents. We provide different representation of this phenomenon on the Fig~\ref{Efficiency_analysis}B. As one can see several runs do not suffer from learning's shutdown, however this doesn't mean that learning didn't play significant role in these runs during the evolution. 
-
-We also have tested our learning mechanism against simple random activation of silent neurons (Fig~\ref{Efficiency_analysis}A). ``Random learning'' implies that silent neuron has a fixed probability of activation and inclusion in the network at a given time step. We applied this procedure in the analysis phase to the agents evolved with learning. We examined several activation probabilities in the interval $\left[0.01,0.1\right]$, but show results only for the best value $0.5$. Random activations of neurons do not help to increase efficiency comparing to our learning mechanism and even showed some tendency to decrease efficiency (t-test with p-value $0.08$) comparing to the results of the same agents but without any learning.
-
-Our results suggest that evolutionary algorithm  
 
 \begin{figure}[!t]
 \begin{center}
 \includegraphics[width=8cm]{Fig2_Efficiency_analysis.eps}
 %\epsfig{file=Fig3_Behavior_Evolution.eps, width=17cm}
-\caption{Efficiency analysis}
+\caption{Efficiency analysis. \textbf{A)} Efficiency of the different types of agents (D -- development, EL -- learning during an evolution, AL -- learning during an analysis phase, ARL -- ``random learning'' during an analysis phase). $\#$ denotes paired samples t-test with $p\mathrm{-value}<0.001$, $*$ denotes t-test with $p\mathrm{-value}=0.012$. \textbf{B)} Comparison of the efficiency of the learning agents and the same agents without learning. Each dot represents averaged value for the one evolutionary run. The best $20$ runs are indicated.}
 \label{Efficiency_analysis}
 \end{center}
 \end{figure}
+
+Primarily we have studied how learning algorithm affects efficiency of an agents. We have randomly generated 10 environments with different goals structure and run evolution with and without learning (only development process) 5 times for each environment. Then we detected the best population in terms of average accumulated reward in each run. For all agents in the best population we have performed development process for 5 times. Finally, we run these 5 different controllers for each agent from all $2^{n^{\mathrm{env}}}$ initial states of the environment. On the Fig.~\ref{Efficiency_analysis}A we present averaged results of the described analysis procedure. We have not found statistical difference between efficiency of the agents evolved with and without learning -- t-test showed $p\mathrm{-value}=0.23$. However, shutdown of learning only in the analysis phase significantly decreases the efficiency that reveals the importance of learning for these agents. We provide different representation of this phenomenon on the Fig.~\ref{Efficiency_analysis}B. As one can see several runs do not suffer from learning's shutdown, however this doesn't mean that learning didn't play significant role in these runs during the evolution. 
+
+We have also tested our learning mechanism against simple random activation of silent neurons (Fig.~\ref{Efficiency_analysis}A). {\em Random learning} implies that silent neuron has a fixed probability of activation and inclusion in the network at a given time step. We applied this procedure in the analysis phase to the agents evolved with learning. We examined several activation probabilities in the interval $\left[0.01,0.1\right]$, but show results only for the best value $0.5$. Random activations of neurons do not help to increase efficiency comparing to our learning mechanism and even showed some tendency to decrease efficiency (paired samples t-test with p-value $0.08$) comparing to the results of the same agents but without any learning.
+
+Our results suggest that evolutionary algorithm ``finds way'' to make non-learning agents almost as effective as learning ones. We found that the distribution of pools' sizes for the non-learning agents is shifted toward smaller sizes (data is not shown). These agents also have more pools in average than learning agents. This fact means that non-learning agents are in some sense more determined since development algorithm is highly stochastic. 
+
+As we have showed earlier~\citep{LakhmanBurtsev2013} behavior evolved in the course of evolution in a hypercubic environment consists of two phases: preliminary sequence of actions unique for the particular initial state and a cycle of actions that agent infinitely repeats. We will address the second phase as behavioral policy. We have conducted analysis of the innate and learned behaviors' evolution for the best run (Fig.~\ref{Behavior_Evolution}A). For this purpose we performed development for 5 times for the best agents in each generation. Then we evaluated resulting controllers with and without learning. The analysis showed that at certain evolutionary moments efficiency of the learned behavior sharply increases as compared with innate behavior.
+
+\begin{figure*}[!t]
+\begin{center}
+\includegraphics[width=16cm]{Fig3_Behavior_Evolution.eps}
+%\epsfig{file=Fig3_Behavior_Evolution.eps, width=17cm}
+\caption{Behavioral evolution. \textbf{A)} Dynamics of the average efficiency of the innate and learned behavior for the best evolutionary run. The values are calculated for the best agent of the each $50$-th generation. \textbf{B-C)} Dynamics of the average efficiency for the moments of increase in the efficiency of the learned behavior. The values are calculated for the best agent of the each $10$-th generation. \textbf{D)} Averaged dynamics of the duration of learning. Duration of the learning is calculated as the last time step of the agent's life when one can observe activation of silent neuron.}
+\label{Behavior_Evolution}
+\end{center}
+\end{figure*}             
+
+\begin{figure}[!b]
+\begin{center}
+\includegraphics[width=8cm]{Fig4.eps}
+%\epsfig{file=Fig3_Behavior_Evolution.eps, width=17cm}
+\caption{Dynamics of the activations of silent neurons during an agent's life averaged over the best $10$ evolutionary runs}
+\label{Activations_dynamics}
+\end{center}
+\end{figure}
+
+The increase in efficiency can occur both while efficiency of the innate behavior is decreasing (Fig.~\ref{Behavior_Evolution}B) and while its efficiency remains unchanged (Fig.~\ref{Behavior_Evolution}C). On the behavioral level the change of the dominant behavioral policy in the population is underlying such moments. At these moments one can find up to $200$ rare modifications of the dominant behavioral policy in the behavior of the learning agents depending on the course of development and learning (data is not shown). The number of observed policies are sharply reduced when we analyze the same agents but without learning. This phenomenon might be an important mechanism whereby new successful policies are found through learning.
 
 \begin{figure}[!b]
 \begin{center}
 \includegraphics[width=8cm]{Fig5.eps}
 %\epsfig{file=Fig3_Behavior_Evolution.eps, width=17cm}
-\caption{Effectiveness analysis}
-\label{Effectiveness_analysis}
+\caption{Dependence of the number of activated silent neurons on the quality of learning. Each dot on the graph represents reward averaged over all initial states of the environment for one development of the best agent of $1781$-th generation on the Fig.~\ref{Behavior_Evolution}. Spearman correlation coefficient $\rho=0.52$ with $p\mathrm{-value}<0.001$}
+\label{Neurons_Learning_Correlation}
 \end{center}
 \end{figure}
 
+\begin{figure*}[!t]
+\begin{center}
+\includegraphics[width=16cm]{Fig6.eps}
+%\epsfig{file=Fig3_Behavior_Evolution.eps, width=17cm}
+\caption{The dynamics of the learning process}
+\label{Learning_Process}
+\end{center}
+\end{figure*}
+
+The increase in the efficiency of the learned behavior often occurs together with an increase in the average learning time of neurocontrollers -- the time during which silent neurons are activating (starting from $4850$-th generation on the Fig.~\ref{Behavior_Evolution}D). Dynamics of the activations of silent neurons during the learning process averaged over the best $10$ evolutionary runs is shown on the Fig.~\ref{Activations_dynamics}. On average about $50\%$ of silent neurons are being activated lifelong, but most of the neurons are being activated in the early stages of life (up to $10$-th time step). However activations of silent neurons could be found even on the $100$-th time step for the part of the evolutionary runs.       
 
 \section{Conclusions}
 
-% \begin{figure*}[!t]
-% \begin{center}
-% \includegraphics[width=16cm]{Fig3_Behavior_Evolution.eps}
-% %\epsfig{file=Fig3_Behavior_Evolution.eps, width=17cm}
-% \caption{Behavior Evolution}
-% \label{Beahvior_Evolution}
-% \end{center}
-% \end{figure*}
-
+\footnotesize
 \bibliographystyle{apalike}
 \bibliography{ALIFE14_paper}
 
